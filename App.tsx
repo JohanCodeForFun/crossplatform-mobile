@@ -1,12 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { Button } from '@rneui/themed';
+import UserList from './src/screens/UserList/UserList';
+import UserForm from './src/screens/UserForm/UserForm';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator initialRouteName='UserForm'>
+        <Tab.Screen name="UserForm" component={UserForm} options={{title: 'Create User'}}/>
+        <Tab.Screen name="UserList" component={UserList}/>
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
