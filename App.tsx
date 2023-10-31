@@ -1,6 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { Button } from '@rneui/themed';
 import UserList from './src/screens/UserList/UserList';
 import UserForm from './src/screens/UserForm/UserForm';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';

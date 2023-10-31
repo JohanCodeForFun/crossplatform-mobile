@@ -1,6 +1,7 @@
 import { View, Text } from "react-native";
 import { Card, Input } from "@rneui/themed";
 import { Button } from "@rneui/base";
+import { PROJECT_ID } from '@env';
 
 const UserForm = () => {
   return (
@@ -11,6 +12,7 @@ const UserForm = () => {
         <View style={{ 
           marginBottom: 24
           }}>
+          <Text>Project ID: {PROJECT_ID}</Text>
           <Text>Firstname: </Text>
           <Input
             placeholder="Firstname"
