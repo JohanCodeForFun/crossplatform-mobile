@@ -1,20 +1,93 @@
-import { View, Text} from "react-native";
-import { Button, Card } from '@rneui/themed';
+import { View, Text } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
+import { Button, Card, ListItem } from "@rneui/themed";
+import {
+  useGetUsersQuery,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+} from "../../store/api/usersApi";
 
 // type UserListProps = {
 //   name: string;
 // };
 
 const UserList = () => {
+  const [expanded, setExpanded] = useState(false);
+
+  const usersList = useGetUsersQuery("users");
+  const { data: users, isLoading } = usersList;
+
+  let sortedData;
+
+  if (users) {
+    sortedData = [...users].sort((a, b) => {
+      if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) {
+        return -1;
+      } else if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
   return (
     <View>
       <Card>
-        <Card.Title>UserList</Card.Title>
-        <Text>Kajsa Anka</Text>
-        <Button>Remove</Button>
+        <Card.Title>List of users!</Card.Title>
+        <View>
+          {isLoading ? (
+            <Text>Loading...</Text>
+          ) : (
+            sortedData &&
+            sortedData.map((user) => {
+              return (
+                <ListItem.Accordion
+                  key={user.id}
+                  content={
+                    <ListItem.Content>
+                      <ListItem.Title>
+                        {user.firstName} {user.lastName}
+                      </ListItem.Title>
+                      <ListItem.Subtitle>Id: {user.id}</ListItem.Subtitle>
+                      <View style={styles.btnContainer}>
+                        <Button buttonStyle={styles.btnEdit}>Edit</Button>
+                        <Button buttonStyle={styles.btnDelete}>Delete</Button>
+                      </View>
+                    </ListItem.Content>
+                  }
+                  isExpanded={expanded}
+                  onPress={() => {
+                    setExpanded(!expanded);
+                  }}
+                ></ListItem.Accordion>
+              );
+            })
+          )}
+        </View>
       </Card>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  btnContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 16,
+    alignItems: "center",
+    width: "100%",
+  },
+  btnEdit: {
+    backgroundColor: "#faad14",
+  },
+  btnDelete: {
+    backgroundColor: "#ff190c",
+  },
+});
 
 export default UserList;
