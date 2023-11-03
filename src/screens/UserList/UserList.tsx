@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Button, Card, ListItem } from "@rneui/themed";
@@ -17,6 +17,16 @@ const UserList = () => {
 
   const usersList = useGetUsersQuery("users");
   const { data: users, isLoading } = usersList;
+  const [updateUser] = useUpdateUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+
+  const handleDeleteUser = async (id: string) => {
+    try {
+      await deleteUser({userId: id}).unwrap();
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   let sortedData;
 
@@ -33,7 +43,7 @@ const UserList = () => {
   }
 
   return (
-    <View>
+    <ScrollView>
       <Card>
         <Card.Title>List of users!</Card.Title>
         <View>
@@ -53,7 +63,10 @@ const UserList = () => {
                       <ListItem.Subtitle>Id: {user.id}</ListItem.Subtitle>
                       <View style={styles.btnContainer}>
                         <Button buttonStyle={styles.btnEdit}>Edit</Button>
-                        <Button buttonStyle={styles.btnDelete}>Delete</Button>
+                        <Button
+                          onPress={() => handleDeleteUser(user.id)}
+                          buttonStyle={styles.btnDelete}
+                        >Delete</Button>
                       </View>
                     </ListItem.Content>
                   }
@@ -67,7 +80,7 @@ const UserList = () => {
           )}
         </View>
       </Card>
-    </View>
+    </ScrollView>
   );
 };
 
