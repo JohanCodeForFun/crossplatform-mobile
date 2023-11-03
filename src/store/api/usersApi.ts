@@ -36,6 +36,7 @@ const firebaseBaseQuery = async ({ baseUrl, url, method, body }: Props) => {
 export const usersApi = createApi({
   reducerPath: 'usersApi',
 	baseQuery: firebaseBaseQuery,
+	tagTypes: ['users'],
 	endpoints: (builder) => ({
 		createUser: builder.mutation({
 			query: ({ user }) => ({
@@ -44,6 +45,7 @@ export const usersApi = createApi({
 				method: 'POST',
 				body: user
 			}),
+			invalidatesTags: ['users'],
 		}),
 		getUsers: builder.query({
 			query: ({ userList }) => ({
@@ -52,6 +54,7 @@ export const usersApi = createApi({
 				method: 'GET',
 				body: userList
 			}),
+			providesTags: ['users'],
 		}),
 		updateUser: builder.mutation({
 			query: ({ userId, ...user }) => ({
@@ -63,6 +66,7 @@ export const usersApi = createApi({
 					lastName: user.lastName
 				}
 			}),
+			invalidatesTags: ['users'],
 		}),
 		deleteUser: builder.mutation({
 			query: ({ userId }) => ({
@@ -71,6 +75,7 @@ export const usersApi = createApi({
 				method: 'DELETE',
 				body: ''
 			}),
+			invalidatesTags: ['users'],
 		}),
 	}),
 });
