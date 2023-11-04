@@ -2,6 +2,7 @@ import { View, Text, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Button, Card, ListItem } from "@rneui/themed";
+import UpdateUserModal from "./modal/UpdateUserModal";
 import {
   useGetUsersQuery,
   useUpdateUserMutation,
@@ -14,6 +15,11 @@ import {
 
 const UserList = () => {
   const [expanded, setExpanded] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [userToUpdate, setUserToUpdate] = useState({
+    firstName: '',
+    lastName: '',
+  });
 
   const usersList = useGetUsersQuery("users");
   const { data: users, isLoading } = usersList;
@@ -62,7 +68,14 @@ const UserList = () => {
                       </ListItem.Title>
                       <ListItem.Subtitle>Id: {user.id}</ListItem.Subtitle>
                       <View style={styles.btnContainer}>
-                        <Button buttonStyle={styles.btnEdit}>Edit</Button>
+                      <Button
+                        buttonStyle={styles.btnEdit}
+                        onPress={() => {
+                          setShowUpdateModal(!showUpdateModal)
+                          setUserToUpdate(user)
+                        }}
+                        >Update
+                      </Button>
                         <Button
                           onPress={() => handleDeleteUser(user.id)}
                           buttonStyle={styles.btnDelete}
@@ -80,6 +93,12 @@ const UserList = () => {
           )}
         </View>
       </Card>
+      <UpdateUserModal
+        updateUser={updateUser}
+        userToUpdate={userToUpdate}
+        showUpdateModal={showUpdateModal}
+        setShowUpdateModal={setShowUpdateModal}
+      />
     </ScrollView>
   );
 };
@@ -94,9 +113,9 @@ const styles = StyleSheet.create({
     gap: 16,
     alignItems: "center",
     width: "100%",
-  },
+  },  
   btnEdit: {
-    backgroundColor: "#faad14",
+    backgroundColor: '#faad14',
   },
   btnDelete: {
     backgroundColor: "#ff190c",
