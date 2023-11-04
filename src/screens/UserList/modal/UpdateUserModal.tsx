@@ -10,7 +10,7 @@ type Props = {
   setShowUpdateModal: (show: boolean) => void;
 };
 
-const UpdateUserModal = ({ showUpdateModal, setShowUpdateModal, userToUpdate, updateUser }: Props) => {
+export const UpdateUserModal = ({ showUpdateModal, setShowUpdateModal, userToUpdate, updateUser }: Props) => {
 
   const [feedback, setFeedback] = useState("");
   const [user, setUser] = useState({
@@ -168,5 +168,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-export default UpdateUserModal;
