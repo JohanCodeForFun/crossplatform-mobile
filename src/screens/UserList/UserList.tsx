@@ -2,7 +2,7 @@ import { View, Text, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Button, Card, ListItem } from "@rneui/themed";
-import UpdateUserModal from "./modal/UpdateUserModal";
+import { UpdateUserModal } from "./modal/UpdateUserModal";
 import {
   useGetUsersQuery,
   useUpdateUserMutation,
