@@ -26,14 +26,14 @@ export const UpdateUserModal = ({ showUpdateModal, setShowUpdateModal, userToUpd
   }, [userToUpdate]);
 
 
-  const handleFirstNameChange = (newFirstName) => {
+  const handleFirstNameChange = (newFirstName: string) => {
     setUser({
       ...user,
       firstName: newFirstName,
     });
   }
 
-  const handleLastNameChange = (newLastName) => {
+  const handleLastNameChange = (newLastName: string) => {
     setUser({
       ...user,
       lastName: newLastName,
