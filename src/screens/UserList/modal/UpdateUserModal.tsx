@@ -26,17 +26,17 @@ export const UpdateUserModal = ({ showUpdateModal, setShowUpdateModal, userToUpd
   }, [userToUpdate]);
 
 
-  const handleFirstNameChange = (e: { target: { value: string; }; }) => {
+  const handleFirstNameChange = (newFirstName) => {
     setUser({
       ...user,
-      firstName: e.target.value,
+      firstName: newFirstName,
     });
   }
 
-  const handleLastNameChange = (e: { target: { value: string; }; }) => {
+  const handleLastNameChange = (newLastName) => {
     setUser({
       ...user,
-      lastName: e.target.value,
+      lastName: newLastName,
     });
   }
 
@@ -81,39 +81,38 @@ export const UpdateUserModal = ({ showUpdateModal, setShowUpdateModal, userToUpd
           <View style={styles.modalView}>
           <Card>
             <Card.Title>Update User</Card.Title>
-            <Card.Divider />
-            <View style={styles.labels}>
-              <Text style={styles.labelName}>Firstname: </Text>
+            <View>
+              <Text>Firstname: </Text>
               <Input
+                value={user.firstName}
                 placeholder="Firstname"
                 errorStyle={{ color: "red" }}
                 // errorMessage="ENTER A VALID ERROR HERE"
-                onChangeText={(newFirstName) => setFirstName(newFirstName)}
+                onChangeText={(newFirstName) => handleFirstNameChange(newFirstName)}
               />
-              <Text style={styles.labelName}>Lastname: </Text>
+              <Text>Lastname: </Text>
               <Input
+                value={user.lastName}
                 placeholder="Lastname"
                 errorStyle={{ color: "red" }}
                 // errorMessage="ENTER A VALID ERROR HERE"
-                onChangeText={(newLastName) => setLastName(newLastName)}
+                onChangeText={(newLastName) => handleLastNameChange(newLastName)}
               />
             </View>
             <Text
-              // className={styles.feedbackText}
-              // style={{ color: submitted ? "#3c425c" : "#ed4e59" }}
+              style={styles.feedbackText}
             >
               {feedback}
             </Text>
                 <View style={styles.buttonContainer}>
                   <Button
                     title="Cancel"
-                    buttonStyle={styles.button}
                     onPress={HandleModalVisible}>
                   </Button>
                   <Button
                     title="Update User"
-                    buttonStyle={styles.buttonClose}
-                    onPress={HandleModalVisible}>
+                    buttonStyle={styles.buttonUpdate}
+                    onPress={handleUpdateUser}>
                   </Button>
                 </View>
               </Card>
@@ -146,17 +145,12 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  button: {
-    backgroundColor: 'green',
-  },
   buttonContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    gap: 16,
   },
-  buttonOpen: {
-    backgroundColor: '#faad14',
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
+  buttonUpdate: {
+    backgroundColor: 'green',
   },
   textStyle: {
     color: 'white',
@@ -164,6 +158,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  feedbackText: {
+    color: 'red',
     marginBottom: 15,
     textAlign: 'center',
   },
