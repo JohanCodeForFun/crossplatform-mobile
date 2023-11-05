@@ -8,6 +8,7 @@ import {
   useUpdateUserMutation,
   useDeleteUserMutation,
 } from "../../store/api/usersApi";
+import UserAccordion from "./UserAccordion/UserAccordion";
 
 // type UserListProps = {
 //   name: string;
@@ -17,8 +18,8 @@ const UserList = () => {
   const [expanded, setExpanded] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [userToUpdate, setUserToUpdate] = useState({
-    firstName: '',
-    lastName: '',
+    firstName: "",
+    lastName: "",
   });
 
   const usersList = useGetUsersQuery("users");
@@ -28,11 +29,11 @@ const UserList = () => {
 
   const handleDeleteUser = async (id: string) => {
     try {
-      await deleteUser({userId: id}).unwrap();
+      await deleteUser({ userId: id }).unwrap();
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   let sortedData;
 
@@ -57,39 +58,17 @@ const UserList = () => {
             <Text>Loading...</Text>
           ) : (
             sortedData &&
-            sortedData.map((user) => {
-              return (
-                <ListItem.Accordion
-                  key={user.id}
-                  content={
-                    <ListItem.Content>
-                      <ListItem.Title>
-                        {user.firstName} {user.lastName}
-                      </ListItem.Title>
-                      <ListItem.Subtitle>Id: {user.id}</ListItem.Subtitle>
-                      <View style={styles.btnContainer}>
-                      <Button
-                        buttonStyle={styles.btnEdit}
-                        onPress={() => {
-                          setShowUpdateModal(!showUpdateModal)
-                          setUserToUpdate(user)
-                        }}
-                        >Update
-                      </Button>
-                        <Button
-                          onPress={() => handleDeleteUser(user.id)}
-                          buttonStyle={styles.btnDelete}
-                        >Delete</Button>
-                      </View>
-                    </ListItem.Content>
-                  }
-                  isExpanded={expanded}
-                  onPress={() => {
-                    setExpanded(!expanded);
-                  }}
-                ></ListItem.Accordion>
-              );
-            })
+            sortedData.map((user) => (
+              <UserAccordion
+                key={user.id}
+                user={user}
+                handleDeleteUser={handleDeleteUser}
+                updateUser={updateUser}
+                showUpdateModal={showUpdateModal}
+                setShowUpdateModal={setShowUpdateModal}
+                setUserToUpdate={setUserToUpdate}
+              />
+            ))
           )}
         </View>
       </Card>
@@ -113,9 +92,13 @@ const styles = StyleSheet.create({
     gap: 16,
     alignItems: "center",
     width: "100%",
-  },  
+  },
+  accordionDesc: {
+    color: "#6c757d",
+    marginBottom: 16,
+  },
   btnEdit: {
-    backgroundColor: '#faad14',
+    backgroundColor: "#faad14",
   },
   btnDelete: {
     backgroundColor: "#ff190c",
