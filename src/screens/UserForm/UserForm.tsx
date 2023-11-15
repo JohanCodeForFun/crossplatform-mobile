@@ -1,18 +1,25 @@
-import React, { useState } from "react";
-import { View, Text } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, Text, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Card, Input } from "@rneui/themed";
 import { StyleSheet } from "react-native";
 import { Button } from "@rneui/base";
 import { PROJECT_ID } from '@env';
+import { useSelector } from "react-redux";
 import { useCreateUserMutation } from "../../store/api/usersApi";
+import { useToast } from "react-native-toast-notifications";
 
 const UserForm = () => {  
+  const lastNameRef = useRef<HTMLInputElement>(null);
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const toast = useToast();
 
   const [createUser,] = useCreateUserMutation();
+
+  const loggedInAs = useSelector((state: any) => state.auth.loggedInAs);
 
   const submitHandler = () => {
     if (firstName !== "" && lastName !== "") {
@@ -29,6 +36,14 @@ const UserForm = () => {
           firstName,
           lastName,
         },
+      }).then((res) => {
+        if (res) {
+          toast.show("User created successfully!");
+        } else {
+          toast.show("User creation failed!");
+        }
+      }).catch((err) => {
+        toast.show("User creation failed!");
       });
     } else {
       setSubmitted(false);
@@ -37,6 +52,7 @@ const UserForm = () => {
   };
 
   return (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <View>
       <Card>
         <Card.Title>UserForm</Card.Title>
@@ -45,13 +61,18 @@ const UserForm = () => {
           <Text style={styles.labelName}>Firstname: </Text>
           <Input
             placeholder="Firstname"
+            returnKeyType="next"
+            blurOnSubmit={false}
             errorStyle={{ color: "red" }}
             // errorMessage="ENTER A VALID ERROR HERE"
+            onSubmitEditing={() => lastNameRef.current?.focus()}
             onChangeText={(newFirstName) => setFirstName(newFirstName)}
           />
           <Text style={styles.labelName}>Lastname: </Text>
           <Input
             placeholder="Lastname"
+            returnKeyType="send"
+            onSubmitEditing={submitHandler}
             errorStyle={{ color: "red" }}
             // errorMessage="ENTER A VALID ERROR HERE"
             onChangeText={(newLastName) => setLastName(newLastName)}
@@ -70,7 +91,9 @@ const UserForm = () => {
       </Card>
 
       <Text style={styles.footer}>Project ID: {PROJECT_ID}</Text>
+      <Text style={styles.footer}>Logged in as: {loggedInAs ? loggedInAs.firstName : 'not logged in'}</Text>
     </View>
+    </TouchableWithoutFeedback>
   );
 };
 
