@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Button, ListItem } from "@rneui/themed";
 import { View, TouchableOpacity } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { logIn, logOut } from "../../../store/slices/authSlice";
 
 const UserAccordion = ({
   user,
@@ -13,6 +15,10 @@ const UserAccordion = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
 
+  const loggedInAs = useSelector((state: any) => state.auth.loggedInAs);
+  // const useruser = route?.params?.user || loggedInAs;
+  const dispatch = useDispatch();
+
   const toggleAccordion = () => {
     setExpanded(!expanded);
   };
@@ -22,7 +28,7 @@ const UserAccordion = ({
       <TouchableOpacity onPress={toggleAccordion}>
         <ListItem.Content style={styles.listContent}>
           <ListItem.Title>
-            {user.firstName} {user.lastName} - (click name for info)
+            {user.firstName} {user.lastName} - (click name for login)
           </ListItem.Title>
           <View style={styles.btnContainer}>
             <Button
@@ -49,6 +55,21 @@ const UserAccordion = ({
             <ListItem.Title style={styles.accordionDesc}>
               User id: {user.id}
             </ListItem.Title>
+            <View style={styles.actionsContainer}>
+        {loggedInAs?.id === user.id ? (
+          <>
+            <Button
+              onPress={() => dispatch(logOut())}
+              title="Logga ut"
+              color="error"
+            />
+          </>
+        ) : (
+          <>
+            <Button onPress={() => dispatch(logIn(user))} title="Logga in" />
+          </>
+        )}
+      </View>
           </ListItem.Content>
           <Divider />
         </View>
@@ -77,6 +98,9 @@ const styles = StyleSheet.create({
   },
   accordionDesc: {
     marginBottom: 8,
+  },
+  actionsContainer: {
+    backgroundColor: 'pink',
   },
   divider: {
     borderBottomColor: 'rgba(0, 0, 0, 0.3)', // Change the color as needed
