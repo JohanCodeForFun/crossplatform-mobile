@@ -22,6 +22,9 @@ const UserList = () => {
                   <ListItem.Title>
                     {item.text}
                   </ListItem.Title>
+                  <ListItem.Subtitle>
+                    Date: {item.createdAt}.
+                  </ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
             )}
