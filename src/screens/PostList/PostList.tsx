@@ -1,4 +1,5 @@
 import { ListItem } from "@rneui/themed";
+import { StyleSheet } from "react-native";
 import { View, Text, FlatList } from "react-native";
 
 import { useGetPostsQuery } from "../../store/api/postsApi";
@@ -18,13 +19,16 @@ const UserList = () => {
               <ListItem
                 key={item.id}
               >
-                <ListItem.Content>
-                  <ListItem.Title>
+                <ListItem.Content style={styles.container}>
+                  <ListItem.Subtitle style={styles.handleName}>
+                    @{item.createdBy}
+                   </ListItem.Subtitle>
+                  <ListItem.Title style={styles.title}>
                     {item.text}
                   </ListItem.Title>
-                  <ListItem.Subtitle>
-                    Date: {item.createdAt}.
-                  </ListItem.Subtitle>
+                  <ListItem.Subtitle style={styles.footer}>
+                    ({item.createdAt})
+                   </ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
             )}
@@ -34,5 +38,26 @@ const UserList = () => {
     </View>
   );
 };
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'pink',
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  handleName: {
+    marginBottom: 8,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  footer: {
+    marginTop: 16,
+  }
+});
 
 export default UserList;
