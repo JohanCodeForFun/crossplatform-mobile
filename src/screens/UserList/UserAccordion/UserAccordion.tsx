@@ -14,6 +14,7 @@ const UserAccordion = ({
   setUserToUpdate,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   const loggedInAs = useSelector((state: any) => state.auth.loggedInAs);
   // const useruser = route?.params?.user || loggedInAs;
@@ -23,26 +24,34 @@ const UserAccordion = ({
     setExpanded(!expanded);
   };
 
+  const handleCheckox = () => {
+    setChecked(!checked);
+  }
+
   return (
     <View>
       <TouchableOpacity onPress={toggleAccordion}>
         <ListItem.Content style={styles.listContent}>
           <ListItem.Title>
             {user.firstName} {user.lastName} - (click name for login)
-          </ListItem.Title>
-          <View style={styles.btnContainer}>
-            <Button
-              buttonStyle={styles.btnEdit}
-              onPress={() => {
-                setShowUpdateModal(!showUpdateModal);
-                setUserToUpdate(user);
-              }}
-            >
-              Update
-            </Button>
-            <Button
-              onPress={() => handleDeleteUser(user.id)}
-              buttonStyle={styles.btnDelete}
+            </ListItem.Title>
+            <View style={styles.btnContainer}>
+              <ListItem.CheckBox
+                checked={checked}
+                onPress={handleCheckox}
+              />
+              <Button
+                buttonStyle={styles.btnEdit}
+                onPress={() => {
+                  setShowUpdateModal(!showUpdateModal);
+                  setUserToUpdate(user);
+                }}
+              >
+                Update
+              </Button>
+              <Button
+                onPress={() => handleDeleteUser(user.id)}
+                buttonStyle={styles.btnDelete}
             >
               Delete
             </Button>

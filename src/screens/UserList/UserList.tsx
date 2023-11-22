@@ -12,7 +12,7 @@ import {
 import { useDeleteUserPostsMutation } from "../../store/api/postsApi";
 import UserAccordion from "./UserAccordion/UserAccordion";
 
-const UserList = ({ navigation }) => {
+const UserList = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [userToUpdate, setUserToUpdate] = useState({
     firstName: "",
@@ -30,7 +30,9 @@ const UserList = ({ navigation }) => {
 
   const handleDeleteUser = async (id: string) => {
     try {
-      await deleteUserPosts({ createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}` }).unwrap();
+      await deleteUserPosts({
+        createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}`,
+      }).unwrap();
       await deleteUser({ userId: id }).unwrap();
     } catch (err) {
       console.error(err);
@@ -52,25 +54,30 @@ const UserList = ({ navigation }) => {
   }
 
   return (
-    <ScrollView>
+    <>
       <Card>
         <Card.Title>List of users!</Card.Title>
         <View>
           {isLoading ? (
             <Text>Loading...</Text>
           ) : (
-            sortedData &&
-            sortedData.map((user) => (
-              <UserAccordion
-                key={user.id}
-                user={user}
-                handleDeleteUser={handleDeleteUser}
-                updateUser={updateUser}
-                showUpdateModal={showUpdateModal}
-                setShowUpdateModal={setShowUpdateModal}
-                setUserToUpdate={setUserToUpdate}
+            sortedData && (
+              <FlatList
+                data={sortedData}
+                renderItem={({ item }) => (
+                  <UserAccordion
+                    key={item.id}
+                    user={item}
+                    handleDeleteUser={handleDeleteUser}
+                    updateUser={updateUser}
+                    showUpdateModal={showUpdateModal}
+                    setShowUpdateModal={setShowUpdateModal}
+                    setUserToUpdate={setUserToUpdate}
+                  />
+                )}
+                keyExtractor={(item) => item.id}
               />
-            ))
+            )
           )}
         </View>
       </Card>
@@ -80,7 +87,7 @@ const UserList = ({ navigation }) => {
         showUpdateModal={showUpdateModal}
         setShowUpdateModal={setShowUpdateModal}
       />
-    </ScrollView>
+    </>
   );
 };
 
