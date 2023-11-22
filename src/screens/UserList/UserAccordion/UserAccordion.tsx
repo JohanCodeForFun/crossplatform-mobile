@@ -8,7 +8,6 @@ import { logIn, logOut } from "../../../store/slices/authSlice";
 const UserAccordion = ({
   user,
   handleDeleteUser,
-  updateUser,
   showUpdateModal,
   setShowUpdateModal,
   setUserToUpdate,
@@ -17,7 +16,6 @@ const UserAccordion = ({
   const [checked, setChecked] = useState(false);
 
   const loggedInAs = useSelector((state: any) => state.auth.loggedInAs);
-  // const useruser = route?.params?.user || loggedInAs;
   const dispatch = useDispatch();
 
   const toggleAccordion = () => {
@@ -52,7 +50,7 @@ const UserAccordion = ({
               <Button
                 onPress={() => handleDeleteUser(user.id)}
                 buttonStyle={styles.btnDelete}
-            >
+              >
               Delete
             </Button>
           </View>

@@ -69,7 +69,6 @@ const UserList = () => {
                     key={item.id}
                     user={item}
                     handleDeleteUser={handleDeleteUser}
-                    updateUser={updateUser}
                     showUpdateModal={showUpdateModal}
                     setShowUpdateModal={setShowUpdateModal}
                     setUserToUpdate={setUserToUpdate}
