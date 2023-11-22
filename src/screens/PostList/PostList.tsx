@@ -30,9 +30,13 @@ const UserList = () => {
             data={posts}
             renderItem={({ item }) => (
               <ListItem key={item.id}>
+              {item.private === true && item.createdBy !==
+                `${loggedInAs?.firstName} ${loggedInAs?.lastName}` ? null :
                 <ListItem.Content style={styles.container}>
                   <ListItem.Subtitle style={styles.handleName}>
+
                     @{item.createdBy}
+
                     {item.createdBy ===
                       `${loggedInAs?.firstName} ${loggedInAs?.lastName}` && (
                       <Button
@@ -50,6 +54,7 @@ const UserList = () => {
                     ({item.createdAt})
                   </ListItem.Subtitle>
                 </ListItem.Content>
+              }
               </ListItem>
             )}
           />

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { Card, Input } from "@rneui/themed";
+import { Card, Input, ListItem } from "@rneui/themed";
 import { StyleSheet } from "react-native";
 import { Button } from "@rneui/base";
 import { useSelector } from "react-redux";
@@ -11,11 +11,16 @@ const UserForm = () => {
   const [postText, setPostText] = useState("");
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [checkPrivate, setCheckPrivate] = useState(false);
   // const toast = useToast();
 
   const [createPost,] = useCreatePostMutation();
 
   const loggedInAs = useSelector((state: any) => state.auth.loggedInAs);
+
+  const handleCheckox = () => {
+    setCheckPrivate(!checkPrivate);
+  };
 
   const submitHandler = () => {
     if (postText !== "") {
@@ -31,6 +36,7 @@ const UserForm = () => {
           text: postText,
           createdAt: new Date().toLocaleDateString(),
           createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}`,
+          private: checkPrivate,
         }
       }).then((res) => {
         if (res) {
@@ -66,6 +72,10 @@ const UserForm = () => {
               errorStyle={{ color: "red" }}
               // errorMessage="ENTER A VALID ERROR HERE"
               onChangeText={(newText) => setPostText(newText)}
+            />
+            <ListItem.CheckBox
+              checked={checkPrivate}
+              onPress={handleCheckox}
             />
           </View>
           <Button title="Publish Tweet"
