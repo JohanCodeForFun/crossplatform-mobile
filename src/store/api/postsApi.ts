@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { db } from '../../config/firebase-config';
-import { addDoc, collection, getDocs, deleteDoc, updateDoc, doc, query, orderBy } from "firebase/firestore";
+import { addDoc, collection, getDocs, updateDoc, doc, query, orderBy, where, writeBatch } from "firebase/firestore";
 
 type Props = {
 	baseUrl: string;
@@ -9,7 +9,7 @@ type Props = {
 	body: any;
 };
 
-const firebaseBaseQuery = async ({ baseUrl, url, method, body }: Props) => {
+const firebaseBaseQuery = async ({ url, method, body }: Props) => {
 	switch (method) {
 		case 'GET':
 			const snapshot = await getDocs(query(collection(db, url), orderBy('createdAt', 'desc')));	
@@ -25,8 +25,22 @@ const firebaseBaseQuery = async ({ baseUrl, url, method, body }: Props) => {
 			return { data: { id: updatedRef, ...body } };
 
 		case 'DELETE':
-			const deletedRef = await deleteDoc(doc(db, url));
-			return { data: { id: deletedRef, ...body } };
+			try {
+				const usersPosts = await getDocs(query(collection(db, url), where('createdBy', '==', body)));
+				usersPosts.docs.map(doc => ({id: doc.id, ...doc.data() }));
+	
+				const batch = writeBatch(db);
+				usersPosts.forEach((doc) => {
+					batch.delete(doc.ref);
+				});
+	
+				await batch.commit();
+
+				return { data: { id: body, ...body } };
+
+			} catch(error) {
+				console.error('Error deleting documents: ', error);
+			};
 
 		default:
 			throw new Error(`Unhandled method ${method}`);
@@ -56,17 +70,6 @@ export const postsApi = createApi({
 			}),
 			providesTags: ['posts'],
 		}),
-		updatePost: builder.mutation({
-			query: ({ postId, ...post }) => ({
-				baseUrl: '',
-				url: `posts/${postId}`,
-				method: 'PATCH',
-				body: {
-					text: post.text,
-				}
-			}),
-			invalidatesTags: ['posts'],
-		}),
 		deletePost: builder.mutation({
 			query: ({ postId }) => ({
 				baseUrl: '',
@@ -76,7 +79,16 @@ export const postsApi = createApi({
 			}),
 			invalidatesTags: ['posts'],
 		}),
+		deleteUserPosts: builder.mutation({
+			query: ({ createdBy }) => ({
+				baseUrl: '',
+				url: `posts/`,
+				method: 'DELETE',
+				body: createdBy
+			}),
+			invalidatesTags: ['posts'],
+		}),
 	}),
 });
 
-export const { useCreatePostMutation, useGetPostsQuery, useUpdatePostMutation, useDeletePostMutation } = postsApi;
+export const { useCreatePostMutation, useGetPostsQuery, useDeletePostMutation, useDeleteUserPostsMutation } = postsApi;

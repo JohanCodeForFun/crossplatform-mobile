@@ -1,34 +1,36 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, FlatList } from "react-native";
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Button, Card, ListItem } from "@rneui/themed";
 import { UpdateUserModal } from "./modal/UpdateUserModal";
+import { useSelector } from "react-redux";
 import {
   useGetUsersQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
 } from "../../store/api/usersApi";
+import { useDeleteUserPostsMutation } from "../../store/api/postsApi";
 import UserAccordion from "./UserAccordion/UserAccordion";
 
-// type UserListProps = {
-//   name: string;
-// };
-
-const UserList = () => {
-  const [expanded, setExpanded] = useState(false);
+const UserList = ({ navigation }) => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [userToUpdate, setUserToUpdate] = useState({
     firstName: "",
     lastName: "",
   });
 
+  const loggedInAs = useSelector((state: any) => state.auth.loggedInAs);
+
   const usersList = useGetUsersQuery("users");
   const { data: users, isLoading } = usersList;
+
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
+  const [deleteUserPosts] = useDeleteUserPostsMutation();
 
   const handleDeleteUser = async (id: string) => {
     try {
+      await deleteUserPosts({ createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}` }).unwrap();
       await deleteUser({ userId: id }).unwrap();
     } catch (err) {
       console.error(err);

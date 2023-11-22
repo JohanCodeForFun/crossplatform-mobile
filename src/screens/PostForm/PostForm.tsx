@@ -1,14 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { Card, Input } from "@rneui/themed";
 import { StyleSheet } from "react-native";
 import { Button } from "@rneui/base";
 import { useSelector } from "react-redux";
 import { useCreatePostMutation } from "../../store/api/postsApi";
-import { useToast } from "react-native-toast-notifications";
+// import { useToast } from "react-native-toast-notifications";
 
 const UserForm = () => {  
-  const [text, setText] = useState("");
+  const [postText, setPostText] = useState("");
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
   // const toast = useToast();
@@ -18,19 +18,19 @@ const UserForm = () => {
   const loggedInAs = useSelector((state: any) => state.auth.loggedInAs);
 
   const submitHandler = () => {
-    if (text !== "") {
-      setFeedback(`Tweet, ${text} `);
+    if (postText !== "") {
+      setFeedback(`Tweet, ${postText} `);
       setSubmitted(true);
-      setText("");
+      setPostText("");
       setTimeout(() => {
         setFeedback("");
       }, 5000);
 
       createPost({
         post: {
-          text,
+          text: postText,
           createdAt: new Date().toLocaleDateString(),
-          createdBy: loggedInAs.id,
+          createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}`,
         }
       }).then((res) => {
         if (res) {
@@ -65,7 +65,7 @@ const UserForm = () => {
               returnKeyType="send"
               errorStyle={{ color: "red" }}
               // errorMessage="ENTER A VALID ERROR HERE"
-              onChangeText={(newText) => setText(newText)}
+              onChangeText={(newText) => setPostText(newText)}
             />
           </View>
           <Button title="Publish Tweet"
