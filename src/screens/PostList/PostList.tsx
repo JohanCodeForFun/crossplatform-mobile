@@ -1,11 +1,24 @@
-import { ListItem } from "@rneui/themed";
+import { Button, ListItem } from "@rneui/themed";
 import { StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 import { View, Text, FlatList } from "react-native";
 
 import { useGetPostsQuery } from "../../store/api/postsApi";
+import { useDeletePostMutation } from "../../store/api/postsApi";
 
 const UserList = () => {
   const { data: posts, isLoading } = useGetPostsQuery("posts");
+  const [deletePost] = useDeletePostMutation();
+
+  const loggedInAs = useSelector((state: any) => state.auth.loggedInAs);
+
+  const handleDeleteUserPost = async (id: string) => {
+    try {
+      await deletePost({ postId: id }).unwrap();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <View>
@@ -16,19 +29,26 @@ const UserList = () => {
           <FlatList
             data={posts}
             renderItem={({ item }) => (
-              <ListItem
-                key={item.id}
-              >
+              <ListItem key={item.id}>
                 <ListItem.Content style={styles.container}>
                   <ListItem.Subtitle style={styles.handleName}>
                     @{item.createdBy}
-                   </ListItem.Subtitle>
+                    {item.createdBy ===
+                      `${loggedInAs?.firstName} ${loggedInAs?.lastName}` && (
+                      <Button
+                        onPress={() => handleDeleteUserPost(item.id)}
+                        buttonStyle={styles.btnDelete}
+                      >
+                        Delete Tweet
+                      </Button>
+                    )}
+                  </ListItem.Subtitle>
                   <ListItem.Title style={styles.title}>
                     {item.text}
                   </ListItem.Title>
                   <ListItem.Subtitle style={styles.footer}>
                     ({item.createdAt})
-                   </ListItem.Subtitle>
+                  </ListItem.Subtitle>
                 </ListItem.Content>
               </ListItem>
             )}
@@ -39,11 +59,10 @@ const UserList = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'pink',
+    backgroundColor: "pink",
     padding: 16,
     borderRadius: 8,
     marginBottom: 16,
@@ -51,13 +70,17 @@ const styles = StyleSheet.create({
   handleName: {
     marginBottom: 8,
   },
+  btnDelete: {
+    backgroundColor: "#ff190c",
+    marginLeft: 32,
+  },
   title: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   footer: {
     marginTop: 16,
-  }
+  },
 });
 
 export default UserList;

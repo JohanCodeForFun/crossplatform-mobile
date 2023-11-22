@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { db } from '../../config/firebase-config';
-import { addDoc, collection, getDocs, updateDoc, doc, query, orderBy, where, writeBatch } from "firebase/firestore";
+import { addDoc, collection, getDocs, updateDoc, deleteDoc, doc, query, orderBy, where, writeBatch } from "firebase/firestore";
 
 type Props = {
 	baseUrl: string;
@@ -25,6 +25,10 @@ const firebaseBaseQuery = async ({ url, method, body }: Props) => {
 			return { data: { id: updatedRef, ...body } };
 
 		case 'DELETE':
+			const deletedRef = await deleteDoc(doc(db, url));
+			return { data: { id: deletedRef, ...body } };
+
+		case 'DELETE_ALL':
 			try {
 				const usersPosts = await getDocs(query(collection(db, url), where('createdBy', '==', body)));
 				usersPosts.docs.map(doc => ({id: doc.id, ...doc.data() }));
@@ -83,7 +87,7 @@ export const postsApi = createApi({
 			query: ({ createdBy }) => ({
 				baseUrl: '',
 				url: `posts/`,
-				method: 'DELETE',
+				method: 'DELETE_ALL',
 				body: createdBy
 			}),
 			invalidatesTags: ['posts'],
