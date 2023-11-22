@@ -1,7 +1,7 @@
-import { View, Text, ScrollView, FlatList } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
-import { Button, Card, ListItem } from "@rneui/themed";
+import { Card } from "@rneui/themed";
 import { UpdateUserModal } from "./modal/UpdateUserModal";
 import { useSelector } from "react-redux";
 import {
