@@ -1,16 +1,16 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { setupListeners } from '@reduxjs/toolkit/query';
-import { usersApi } from './api/usersApi';
-import { postsApi } from './api/postsApi';
-import authSlice from './slices/authSlice';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import storage from 'redux-persist/lib/storage'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
 import { persistReducer, persistStore } from "redux-persist";
+
+import { usersApi } from "./api/usersApi";
+import { postsApi } from "./api/postsApi";
+import authSlice from "./slices/authSlice";
 
 const persistConfig = {
   key: "crossplatform-mobile-v1.0.0",
-  storage: storage,
-  whitelist: ["auth"], // Lägg till fler delar av store som du vill spara här.
+  storage: AsyncStorage,
+  whitelist: ["auth"],
 };
 
 const persistedReducer = persistReducer(
@@ -20,15 +20,24 @@ const persistedReducer = persistReducer(
     [postsApi.reducerPath]: postsApi.reducer,
     auth: authSlice,
   })
-)
+);
 
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware().concat(
-    usersApi.middleware,
-    postsApi.middleware,
-    ),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "persist/PURGE",
+        ],
+      },
+    }).concat(usersApi.middleware, postsApi.middleware),
+});
+
+export const persistor = persistStore(store, null, () => {
+  store.getState();
 });
 
 setupListeners(store.dispatch);
