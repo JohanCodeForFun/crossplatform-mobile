@@ -1,5 +1,5 @@
 import { View, Text, FlatList } from "react-native";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Card } from "@rneui/themed";
 import { UpdateUserModal } from "./modal/UpdateUserModal";
@@ -8,7 +8,7 @@ import {
   useGetUsersQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
-  useDeleteUsersBulkMutation
+  useDeleteUsersBulkMutation,
 } from "../../store/api/usersApi";
 import { useDeleteUserPostsMutation } from "../../store/api/postsApi";
 import UserAccordion from "./UserAccordion/UserAccordion";
@@ -37,18 +37,19 @@ const UserList = () => {
   };
 
   const handleBulkDelete = async () => {
-    console.log("in handlebulkdelete btn:", selectedUsers)
+    console.log("in handlebulkdelete btn:", selectedUsers);
     try {
       await deleteUsersBulk(selectedUsers).unwrap();
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   const handleDeleteUser = async (id: string) => {
-    console.log({ message: "handle delete user",
+    console.log({
+      message: "handle delete user",
       createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}`,
-    })
+    });
     try {
       await deleteUserPosts({
         createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}`,
@@ -59,19 +60,19 @@ const UserList = () => {
     }
   };
 
-  let sortedData;
-
-  if (users) {
-    sortedData = [...users].sort((a, b) => {
-      if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) {
-        return -1;
-      } else if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-  }
+  let sortedData = useMemo(() => {
+    if (users) {
+      return [...users].sort((a, b) => {
+        if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) {
+          return -1;
+        } else if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    }
+  }, [users]);
 
   return (
     <>
@@ -88,13 +89,10 @@ const UserList = () => {
               </Text>
             </View>
             <View style={styles.btnContainer}>
-              <Button
-                onPress={handleBulkClear}
-                >Clear</Button>
-              <Button
-                onPress={handleBulkDelete}
-                buttonStyle={styles.btnDelete}
-              >Bulk Delete</Button>
+              <Button onPress={handleBulkClear}>Clear</Button>
+              <Button onPress={handleBulkDelete} buttonStyle={styles.btnDelete}>
+                Bulk Delete
+              </Button>
             </View>
           </Card>
         )}
