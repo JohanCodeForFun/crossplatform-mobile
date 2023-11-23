@@ -60,7 +60,7 @@ const UserList = () => {
     }
   };
 
-  let sortedData = useMemo(() => {
+  let sortedUserList = useMemo(() => {
     if (users) {
       return [...users].sort((a, b) => {
         if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) {
@@ -96,13 +96,13 @@ const UserList = () => {
             </View>
           </Card>
         )}
-        <View>
+        <View style={styles.container}>
           {isLoading ? (
             <Text>Loading...</Text>
           ) : (
-            sortedData && (
+            sortedUserList && (
               <FlatList
-                data={sortedData}
+                data={sortedUserList}
                 renderItem={({ item }) => (
                   <UserAccordion
                     key={item.id}
@@ -133,7 +133,7 @@ const UserList = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    marginBottom: 16,
   },
   btnContainer: {
     flexDirection: "row",

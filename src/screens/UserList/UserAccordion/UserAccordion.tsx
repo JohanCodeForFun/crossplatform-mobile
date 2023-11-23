@@ -42,7 +42,7 @@ const UserAccordion = ({
   }
 
   return (
-    <View>
+    <View style={styles.viewContainer}>
       <TouchableOpacity onPress={toggleAccordion}>
         <ListItem.Content style={styles.listContent}>
           <ListItem.Title>
@@ -107,6 +107,9 @@ const Divider = () => <View style={styles.divider} />;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  viewContainer: {
+    paddingBottom: 8,
   },
   listContent: {
     marginBottom: 24,
