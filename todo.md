@@ -1,7 +1,7 @@
 TODO
 
 - [X] Sortera din UserList i alfabetisk ordning.
-    - [ ] Använd då gärna useMemo så sorteringen endast sker när det är nödvändigt.
+    - [X] Använd då gärna useMemo så sorteringen endast sker när det är nödvändigt.
 
  - [X] När en användare raderas, Radera även alla posts den användaren har skapat.
 
