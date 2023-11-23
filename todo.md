@@ -6,7 +6,7 @@ TODO
  - [X] När en användare raderas, Radera även alla posts den användaren har skapat.
 
  - [X] Gör det möjligt att markera flera användare samtidigt i din <FlatList> med hjälp av <Checkbox>.
-    - [ ] När en eller flera användare är markerade ska en knapp visas för "Bulk delete".
+    - [X] När en eller flera användare är markerade ska en knapp visas för "Bulk delete".
 
  - [X] Gör det möjligt för användaren som skapade en post att radera den. Användare ska alltså bara kunna radera posts de själva skapat. Kolla då fältet createdBy.
 

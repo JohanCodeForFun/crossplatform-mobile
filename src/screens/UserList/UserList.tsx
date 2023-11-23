@@ -8,12 +8,15 @@ import {
   useGetUsersQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useDeleteUsersBulkMutation
 } from "../../store/api/usersApi";
 import { useDeleteUserPostsMutation } from "../../store/api/postsApi";
 import UserAccordion from "./UserAccordion/UserAccordion";
+import { Button } from "@rneui/base";
 
 const UserList = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [userToUpdate, setUserToUpdate] = useState({
     firstName: "",
     lastName: "",
@@ -27,8 +30,25 @@ const UserList = () => {
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteUserPosts] = useDeleteUserPostsMutation();
+  const [deleteUsersBulk] = useDeleteUsersBulkMutation();
+
+  const handleBulkClear = () => {
+    setSelectedUsers([]);
+  };
+
+  const handleBulkDelete = async () => {
+    console.log("in handlebulkdelete btn:", selectedUsers)
+    try {
+      await deleteUsersBulk(selectedUsers).unwrap();
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   const handleDeleteUser = async (id: string) => {
+    console.log({ message: "handle delete user",
+      createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}`,
+    })
     try {
       await deleteUserPosts({
         createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}`,
@@ -57,6 +77,27 @@ const UserList = () => {
     <>
       <Card>
         <Card.Title>List of users!</Card.Title>
+        {selectedUsers.length > 0 && (
+          <Card>
+            <View>
+              <Text>{selectedUsers.length} users selected</Text>
+            </View>
+            <View>
+              <Text style={styles.accordionDesc}>
+                {selectedUsers.map((item) => item.firstName).join(", ")}
+              </Text>
+            </View>
+            <View style={styles.btnContainer}>
+              <Button
+                onPress={handleBulkClear}
+                >Clear</Button>
+              <Button
+                onPress={handleBulkDelete}
+                buttonStyle={styles.btnDelete}
+              >Bulk Delete</Button>
+            </View>
+          </Card>
+        )}
         <View>
           {isLoading ? (
             <Text>Loading...</Text>
@@ -68,6 +109,8 @@ const UserList = () => {
                   <UserAccordion
                     key={item.id}
                     user={item}
+                    selectedUsers={selectedUsers}
+                    setSelectedUsers={setSelectedUsers}
                     handleDeleteUser={handleDeleteUser}
                     showUpdateModal={showUpdateModal}
                     setShowUpdateModal={setShowUpdateModal}
@@ -105,7 +148,7 @@ const styles = StyleSheet.create({
     color: "#6c757d",
     marginBottom: 16,
   },
-  btnEdit: {
+  btnClear: {
     backgroundColor: "#faad14",
   },
   btnDelete: {

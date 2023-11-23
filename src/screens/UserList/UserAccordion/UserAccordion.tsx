@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { Button, ListItem } from "@rneui/themed";
 import { View, TouchableOpacity } from "react-native";
@@ -9,6 +9,8 @@ const UserAccordion = ({
   user,
   handleDeleteUser,
   showUpdateModal,
+  selectedUsers,
+  setSelectedUsers,
   setShowUpdateModal,
   setUserToUpdate,
 }) => {
@@ -18,12 +20,25 @@ const UserAccordion = ({
   const loggedInAs = useSelector((state: any) => state.auth.loggedInAs);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (selectedUsers.some((item) => item.id === user.id)) {
+      setChecked(true);
+    } else {
+      setChecked(false);
+    }
+  }, [selectedUsers]);
+
   const toggleAccordion = () => {
     setExpanded(!expanded);
   };
 
   const handleCheckox = () => {
     setChecked(!checked);
+    if (checked === false) {
+      setSelectedUsers((prev) => [...prev, {id: user.id, firstName: user.firstName, lastName: user.lastName}]);
+    } else {
+      setSelectedUsers((prev) => prev.filter((item) => item.id !== user.id));
+    }
   }
 
   return (
