@@ -14,6 +14,12 @@ import { useDeleteUserPostsMutation } from "../../store/api/postsApi";
 import UserAccordion from "./UserAccordion/UserAccordion";
 import { Button } from "@rneui/base";
 
+type User = {
+  id: string;
+  firstName: string;
+  lastName: string;
+};
+
 const UserList = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -85,7 +91,7 @@ const UserList = () => {
             </View>
             <View>
               <Text style={styles.accordionDesc}>
-                {selectedUsers.map((item) => item.firstName).join(", ")}
+                {selectedUsers.map((item: User) => item.firstName).join(", ")}
               </Text>
             </View>
             <View style={styles.btnContainer}>

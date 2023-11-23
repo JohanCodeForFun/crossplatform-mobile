@@ -5,6 +5,24 @@ import { View, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { logIn, logOut } from "../../../store/slices/authSlice";
 
+type User = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  filter(arg0: (item: User) => boolean): unknown;
+  [Symbol.iterator](): IterableIterator<User>;
+};
+
+type props = {
+  user: User;
+  handleDeleteUser: (id: string) => void;
+  showUpdateModal: boolean;
+  selectedUsers: any;
+  setSelectedUsers: any;
+  setShowUpdateModal: any;
+  setUserToUpdate: any;
+};
+
 const UserAccordion = ({
   user,
   handleDeleteUser,
@@ -13,7 +31,7 @@ const UserAccordion = ({
   setSelectedUsers,
   setShowUpdateModal,
   setUserToUpdate,
-}) => {
+}: props) => {
   const [expanded, setExpanded] = useState(false);
   const [checked, setChecked] = useState(false);
 
@@ -21,7 +39,7 @@ const UserAccordion = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (selectedUsers.some((item) => item.id === user.id)) {
+    if (selectedUsers.some((item: User) => item.id === user.id)) {
       setChecked(true);
     } else {
       setChecked(false);
@@ -35,9 +53,9 @@ const UserAccordion = ({
   const handleCheckox = () => {
     setChecked(!checked);
     if (checked === false) {
-      setSelectedUsers((prev) => [...prev, {id: user.id, firstName: user.firstName, lastName: user.lastName}]);
+      setSelectedUsers((prev: User) => [...prev, {id: user.id, firstName: user.firstName, lastName: user.lastName}]);
     } else {
-      setSelectedUsers((prev) => prev.filter((item) => item.id !== user.id));
+      setSelectedUsers((prev: User) => prev.filter((item) => item.id !== user.id));
     }
   }
 
