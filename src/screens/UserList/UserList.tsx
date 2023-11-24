@@ -8,7 +8,6 @@ import {
   useGetUsersQuery,
   useUpdateUserMutation,
   useDeleteUserMutation,
-  useDeleteUsersBulkMutation,
 } from "../../store/api/usersApi";
 import { useDeleteUserPostsMutation } from "../../store/api/postsApi";
 import UserAccordion from "./UserAccordion/UserAccordion";
@@ -36,7 +35,6 @@ const UserList = () => {
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteUserPosts] = useDeleteUserPostsMutation();
-  const [deleteUsersBulk] = useDeleteUsersBulkMutation();
 
   const handleBulkClear = () => {
     setSelectedUsers([]);
@@ -44,11 +42,6 @@ const UserList = () => {
 
   const handleBulkDelete = async () => {
     console.log("WIP to bulk delete", selectedUsers);
-    try {
-      await deleteUsersBulk(selectedUsers).unwrap();
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   const handleDeleteUser = async (id: string, createdBy: string) => {
