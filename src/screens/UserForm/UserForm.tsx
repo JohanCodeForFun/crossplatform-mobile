@@ -6,7 +6,6 @@ import { Button } from "@rneui/base";
 import { PROJECT_ID } from '@env';
 import { useSelector } from "react-redux";
 import { useCreateUserMutation } from "../../store/api/usersApi";
-import { useToast } from "react-native-toast-notifications";
 
 const UserForm = () => {  
   const lastNameRef = useRef<HTMLInputElement>(null);
@@ -15,7 +14,6 @@ const UserForm = () => {
   const [lastName, setLastName] = useState("");
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const toast = useToast();
 
   const [createUser,] = useCreateUserMutation();
 
@@ -36,14 +34,8 @@ const UserForm = () => {
           firstName,
           lastName,
         },
-      }).then((res) => {
-        if (res) {
-          toast.show("User created successfully!");
-        } else {
-          toast.show("User creation failed!");
-        }
       }).catch((err) => {
-        toast.show("User creation failed!");
+        console.error("errror:", err)
       });
     } else {
       setSubmitted(false);

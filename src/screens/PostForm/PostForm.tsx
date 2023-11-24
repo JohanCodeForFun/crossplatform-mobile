@@ -5,14 +5,12 @@ import { StyleSheet } from "react-native";
 import { Button } from "@rneui/base";
 import { useSelector } from "react-redux";
 import { useCreatePostMutation } from "../../store/api/postsApi";
-// import { useToast } from "react-native-toast-notifications";
 
 const UserForm = () => {  
   const [postText, setPostText] = useState("");
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [checkPrivate, setCheckPrivate] = useState(false);
-  // const toast = useToast();
 
   const [createPost,] = useCreatePostMutation();
 
@@ -41,14 +39,11 @@ const UserForm = () => {
       }).then((res) => {
         if (res) {
           console.log("success", res)
-          // toast.show("Post created successfully!");
         } else {
           console.log("else", res)
-          // toast.show("Post creation failed!");
         }
       }).catch((err) => {
         console.log("errror", err)
-        // toast.show("Post creation failed!");
       });
     } else {
       setSubmitted(false);
