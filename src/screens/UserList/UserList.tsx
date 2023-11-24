@@ -43,7 +43,7 @@ const UserList = () => {
   };
 
   const handleBulkDelete = async () => {
-    console.log("in handlebulkdelete btn:", selectedUsers);
+    console.log("WIP to bulk delete", selectedUsers);
     try {
       await deleteUsersBulk(selectedUsers).unwrap();
     } catch (err) {
@@ -51,14 +51,10 @@ const UserList = () => {
     }
   };
 
-  const handleDeleteUser = async (id: string) => {
-    console.log({
-      message: "handle delete user",
-      createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}`,
-    });
+  const handleDeleteUser = async (id: string, createdBy: string) => {
     try {
       await deleteUserPosts({
-        createdBy: `${loggedInAs.firstName} ${loggedInAs.lastName}`,
+        createdBy,
       }).unwrap();
       await deleteUser({ userId: id }).unwrap();
     } catch (err) {

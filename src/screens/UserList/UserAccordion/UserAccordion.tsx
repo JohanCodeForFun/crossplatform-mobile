@@ -15,7 +15,7 @@ type User = {
 
 type props = {
   user: User;
-  handleDeleteUser: (id: string) => void;
+  handleDeleteUser: (id:string, createdBy:string) => void;
   showUpdateModal: boolean;
   selectedUsers: any;
   setSelectedUsers: any;
@@ -37,6 +37,8 @@ const UserAccordion = ({
 
   const loggedInAs = useSelector((state: any) => state.auth.loggedInAs);
   const dispatch = useDispatch();
+
+  const createdBy = `${user.firstName} ${user.lastName}`;
 
   useEffect(() => {
     if (selectedUsers.some((item: User) => item.id === user.id)) {
@@ -81,7 +83,7 @@ const UserAccordion = ({
                 Update
               </Button>
               <Button
-                onPress={() => handleDeleteUser(user.id)}
+                onPress={() => handleDeleteUser(user.id, createdBy)}
                 buttonStyle={styles.btnDelete}
               >
               Delete
